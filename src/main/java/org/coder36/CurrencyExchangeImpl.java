@@ -24,8 +24,8 @@ public class CurrencyExchangeImpl implements CurrencyExchange {
     public String convert( String amount, String srcCurrencyCode, String targetCurrencyCode ) {
         // use BigDecimal as they allow for a arbitrarily large precision
         BigDecimal val = new BigDecimal(amount);
-        ExchangeRate src = exchangeRates.get( srcCurrencyCode );
-        ExchangeRate target = exchangeRates.get( targetCurrencyCode );
+        ExchangeRate src = exchangeRates.get( srcCurrencyCode.toUpperCase() );
+        ExchangeRate target = exchangeRates.get( targetCurrencyCode.toUpperCase() );
 
         // (amount / src.rate) * target.rate
         BigDecimal conversion = val.divide( src.rate, 20, RoundingMode.UP  ).multiply( target.rate );
@@ -33,7 +33,7 @@ public class CurrencyExchangeImpl implements CurrencyExchange {
     }
 
     public boolean hasCurrencyCode(String code ) {
-        return exchangeRates.containsKey(code);
+        return exchangeRates.containsKey(code.toUpperCase());
     }
 
     private class ExchangeRate {

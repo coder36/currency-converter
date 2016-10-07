@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 public class CurrencyExchangeTest {
 
     @Test
-    public void it_reads_in_specially_formatted_exchange_rates() {
+    public void it_reads_in_comma_sperated_exchange_rates() {
         String rates = "" +
                 "United Arab Emirates, Dirhams, AED, 7.2104\n" +
                 "Australia, Dollars, AUD, 1.51239\n" +
@@ -20,15 +20,28 @@ public class CurrencyExchangeTest {
     }
 
     @Test
+    public void it_is_case_insensitive() {
+        String rates = "" +
+                "United Arab Emirates, Dirhams, AED, 7.2104\n" +
+                "Australia, Dollars, AUD, 1.51239";
+
+        CurrencyExchangeImpl currencyExchange = new CurrencyExchangeImpl(rates);
+        assertTrue(currencyExchange.hasCurrencyCode("AED"));
+        assertTrue(currencyExchange.hasCurrencyCode("aed"));
+        assertEquals( "20.98 Australia Dollars", currencyExchange.convert("100.00", "aed", "aud"));
+    }
+
+
+    @Test
     public void it_allows_conversions_between_currencies() {
         String rates = "" +
                 "United Arab Emirates, Dirhams, AED, 7.2104\n" +
                 "Australia, Dollars, AUD, 1.51239";
 
         CurrencyExchangeImpl currencyExchange = new CurrencyExchangeImpl(rates);
-        String res = currencyExchange.convert("100.00", "AUD", "AED");
-        assertEquals( "476.76 United Arab Emirates Dirhams", res);
+        assertEquals( "476.76 United Arab Emirates Dirhams", currencyExchange.convert("100.00", "AUD", "AED"));
     }
+
 
     @Test
     public void it_rounds_conversions_upwards_to_2_decimal_places() {
